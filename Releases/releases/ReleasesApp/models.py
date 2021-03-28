@@ -1,3 +1,26 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.db.models.aggregates import Min
+from django.db.models.fields import CharField
+from django.db.models.fields.related import ForeignKey
 
 # Create your models here.
+class User(AbstractUser):
+    pass
+
+class Release(models.Model):
+    release_date = models.DateField()
+    title = CharField(max_length=100)
+    artist = CharField(max_length=100)
+
+
+class ReleaseScore(models.Model):
+    user = models.ForeignKey('User', on_delete=models.cascade)
+    release = models.ForeignKey('Release', on_delete=models.cascade)
+    score = models.IntegerField(Min=0, Max=10)
+
+
+class ReleasePublicScore:
+    release = models.ForeignKey('Release', on_delete=models.cascade)
+    score = models.ForeignKey('ReleaseScore', on_delete=models.cascade)
+    
