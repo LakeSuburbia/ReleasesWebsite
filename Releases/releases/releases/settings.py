@@ -27,7 +27,7 @@ SECRET_KEY = '*otq7kt2f3$)jdo65xr=cg%(bq*yj%43vjel9t-i_#v^f2vu(p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['134.209.94.227']
 
 AUTH_USER_MODEL = 'ReleasesApp.User'
 
