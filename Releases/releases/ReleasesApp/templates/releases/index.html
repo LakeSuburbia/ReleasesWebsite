@@ -1,0 +1,15 @@
+{% extends "releases/layout.html" %}
+
+{% block body %}
+
+    <h2>WELCOME {{ firstname }} {{lastname}}</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <p>Do you want to log out? <a href="{% url 'login' %}">Log Out here.</a> </p>
+
+    
+
+{% endblock %}

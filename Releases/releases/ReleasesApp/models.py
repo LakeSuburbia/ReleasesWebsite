@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models.aggregates import Min
+from django.core.validators import MaxValueValidator, MinValueValidator 
 from django.db.models.fields import CharField
 from django.db.models.fields.related import ForeignKey
 
@@ -15,12 +15,12 @@ class Release(models.Model):
 
 
 class ReleaseScore(models.Model):
-    user = models.ForeignKey('User', on_delete=models.cascade)
-    release = models.ForeignKey('Release', on_delete=models.cascade)
-    score = models.IntegerField(Min=0, Max=10)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    release = models.ForeignKey('Release', on_delete=models.CASCADE)
+    score = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
 
 
 class ReleasePublicScore:
-    release = models.ForeignKey('Release', on_delete=models.cascade)
-    score = models.ForeignKey('ReleaseScore', on_delete=models.cascade)
+    release = models.ForeignKey('Release', on_delete=models.CASCADE)
+    score = models.ForeignKey('ReleaseScore', on_delete=models.CASCADE)
     
