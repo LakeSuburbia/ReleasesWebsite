@@ -38,10 +38,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-            user.first_name = firstname
-            user.last_name = lastname
+            user = User.objects.create_user(username, email, password, first_name=firstname, last_name=lastname)
             user.save()
         except IntegrityError as e:
             print(e)
@@ -52,6 +49,7 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "releases/register.html")
+
 
 def login_view(request):
     if request.method == "POST":

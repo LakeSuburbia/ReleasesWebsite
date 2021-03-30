@@ -23,4 +23,6 @@ class ReleaseScore(models.Model):
 class ReleasePublicScore:
     release = models.ForeignKey('Release', on_delete=models.CASCADE)
     score = models.ForeignKey('ReleaseScore', on_delete=models.CASCADE)
-    
+    #globalaveragescore = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
+    #globalhottestscore = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
+
