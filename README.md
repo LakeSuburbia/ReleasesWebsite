@@ -9,6 +9,12 @@ The website will keep track of the best releases
 ## TODO
 
 1. Make Class Diagram V
-2. Implement Django Models according to Class Diagram
+2. Implement Django Models according to Class Diagram V
 3. Create Basic Database-Management functions according to Class Diagram
+  * User register V
+  * User Login V
+  * User Logout V
+  * Releases Add
+  * Releases Edit
+  * Releases Vote
 4. Plan ahead
