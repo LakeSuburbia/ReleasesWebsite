@@ -78,33 +78,6 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def addRelease(request):
-    if request.user.is_authenticated:
-        if request.method == "POST":
-            title = request.POST["title"]
-            releasedate = request.POST["releasedate"]
-            artist = request.POST["artist"]
-
-            # TODO Add format control.
-
-            # Attempt to create new user
-            try:
-                if Release.objects.filter(title__icontains=title).count() > 0:
-                    raise IntegrityError("Deze release is reeds toegevoegd!")
-                else:
-                    user = Release.objects.create(artist=artist, title=title, releasedate=releasedate)
-                    user.save()
-            except IntegrityError as e:
-                print(e)
-                return render(request, "releases/register.html", {
-                    "message": str(e)
-                })
-
-            return HttpResponseRedirect(reverse("index"))
-        else:
-            return render(request, "releases/index.html")
-
-
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
