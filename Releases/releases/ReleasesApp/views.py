@@ -87,9 +87,9 @@ def addRelease(request):
             # TODO Add format control.
 
             # Attempt to create new user
-            try:
-                user = Release.objects.create(artist = artist, title = title, releasedate = releasedate)
-                user.save()
+            #try:
+            user = Release.objects.create(artist = artist, title = title, releasedate = releasedate)
+            user.save()
 
             # TODO Add check doubles
             #except IntegrityError as e:
