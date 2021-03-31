@@ -8,9 +8,10 @@ router.register(r'releases', views.ReleaseViewSet)
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("restapi", include(router.urls)),
+    path("restapi/", include(router.urls)),
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('addRelease', views.addRelease, name='addRelease')
 ]

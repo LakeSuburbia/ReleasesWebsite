@@ -8,6 +8,23 @@ from django.urls import reverse
 from django.db import IntegrityError
 from .models import *
 
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ReleaseViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows releases to be viewed or edited.
+    """
+    queryset = Release.objects.all().order_by('release_date')
+    serializer_class = ReleaseSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 # Create your views here.
 def index(request):
@@ -78,19 +95,4 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-
-class ReleaseViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows releases to be viewed or edited.
-    """
-    queryset = Release.objects.all().order_by('release_date')
-    serializer_class = ReleaseSerializer
-    permission_classes = [permissions.IsAuthenticated]
