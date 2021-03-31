@@ -87,7 +87,7 @@ def addRelease(request):
 
             # Attempt to create new user
             try:
-                if Release.objects.filter(title=title).count() > 0:
+                if Release.objects.filter(title__icontains=title).count() > 0:
                     raise IntegrityError("Deze release is reeds toegevoegd!")
                 else:
                     user = Release.objects.create(artist=artist, title=title, releasedate=releasedate)
