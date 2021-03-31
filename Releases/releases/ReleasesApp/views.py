@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
+from rest_framework import viewsets, permissions
+from .serializers import UserSerializer, ReleaseSerializer
 from django.urls import reverse
 from django.db import IntegrityError
 from .models import *
@@ -92,13 +94,30 @@ def addRelease(request):
                 else:
                     user = Release.objects.create(artist=artist, title=title, releasedate=releasedate)
                     user.save()
-            # TODO Add check doubles
             except IntegrityError as e:
                 print(e)
                 return render(request, "releases/register.html", {
-                    "message": "Release is already added."
+                    "message": str(e)
                 })
 
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "releases/index.html")
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ReleaseViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows releases to be viewed or edited.
+    """
+    queryset = Release.objects.all().order_by('release_date')
+    serializer_class = ReleaseSerializer
+    permission_classes = [permissions.IsAuthenticated]
