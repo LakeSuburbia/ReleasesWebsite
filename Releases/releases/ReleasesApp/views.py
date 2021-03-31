@@ -74,3 +74,30 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
+
+
+def addRelease(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            title = request.POST["title"]
+            releasedate = request.POST["releasedate"]
+            artist = request.POST["artist"]
+
+            # TODO Add format control.
+
+            # Attempt to create new user
+            try:
+                user = Release.objects.create(artist = artist, title = title, releasedate = releasedate)
+                user.save()
+
+            # TODO Add check doubles
+            #except IntegrityError as e:
+            #    print(e)
+            #    return render(request, "releases/register.html", {
+            #        "message": "Release is already added."
+            #    })
+            
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "releases/index.html")
