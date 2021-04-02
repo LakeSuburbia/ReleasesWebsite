@@ -121,3 +121,16 @@ def releases_view(request):
     {
         "releases":releases
     })
+
+def release_view(request, releaseid):
+
+    release=Release.objects.get(id=releaseid)
+    if release:
+        return render(request, "releases/release.html",{
+            "id": release.id,
+            "title": release.title,
+            "artist": release.artist,
+            "release_date": release.release_date,
+            })
+    else:
+        return render(request, "releases/releases.html")

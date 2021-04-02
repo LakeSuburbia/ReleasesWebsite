@@ -1,0 +1,17 @@
+{% extends "releases/layout.html" %}
+
+{% block body %}
+
+    <h2> {{ artist }} - {{ title }} released on: {{release_date}}</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    
+
+    <p>Do you want to log out? <a href="{% url 'login' %}">Log Out here.</a> </p>
+
+    
+
+{% endblock %}
