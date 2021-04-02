@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.db import IntegrityError
 from .models import *
+import json
 import requests
 
 
@@ -112,3 +113,11 @@ def add_release(request):
     else:
         return render(request, "releases/add_release.html")
 
+
+
+def releases_view(request):
+    releases = Release.objects.all()
+    return render(request, "releases/releases.html", 
+    {
+        "releases":releases
+    })
