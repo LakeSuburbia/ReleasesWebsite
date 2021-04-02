@@ -14,7 +14,8 @@ The website will keep track of the best releases
      * User register V
      * User Login V
      * User Logout V
-     * Releases Add
+     * Releases Add V
+     * Releases View V
      * Releases Edit
      * Releases Vote
 4. Plan ahead
