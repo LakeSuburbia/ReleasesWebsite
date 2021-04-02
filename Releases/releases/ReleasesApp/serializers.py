@@ -20,6 +20,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             last_name=validated_data['last_name'],
             password = validated_data['password']
         )
+        return user
 
 
 class ReleaseSerializer(serializers.HyperlinkedModelSerializer):
@@ -33,3 +34,4 @@ class ReleaseSerializer(serializers.HyperlinkedModelSerializer):
             title=validated_data['title'],
             artist=validated_data['artist'],
         )
+        return release
