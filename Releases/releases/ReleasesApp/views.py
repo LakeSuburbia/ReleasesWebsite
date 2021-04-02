@@ -1,13 +1,17 @@
-from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import HttpResponse, HttpResponseRedirect, render
+from django.shortcuts import render, HttpResponseRedirect
 from rest_framework import viewsets, permissions
 from .serializers import UserSerializer, ReleaseSerializer
+from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.db import IntegrityError
 from .models import *
+import requests
 
+
+
+#views API
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -26,7 +30,6 @@ class ReleaseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-# Create your views here.
 def index(request):
     # Authenticated users view their inbox
     if request.user.is_authenticated:
@@ -95,4 +98,17 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
+
+def add_release(request):
+    if request.method == "POST":
+        data = {
+        "release_date" : request.POST["release_date"],
+        "artist" : request.POST["artist"],
+        "title" : request.POST["title"]
+        }
+
+        requests.post('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "releases/add_release.html")
 
