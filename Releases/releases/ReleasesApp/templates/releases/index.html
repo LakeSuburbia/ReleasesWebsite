@@ -1,12 +1,30 @@
+
 {% extends "releases/layout.html" %}
 
 {% block body %}
 
-    <h2>WELCOME {{ firstname }} {{lastname}}</h2>
+<h2>WELCOME {{ firstname }} {{lastname}}</h2>
 
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
+
+    <table>
+        <tr>
+            <th>Release Date</th>
+            <th>Artist</th>
+            <th>Title</th>
+        </tr>
+        {% for i in releases %}
+        
+            <tr>
+                <td>{{i.release_date}}</td>
+                <td>{{i.artist}}</td>
+                <td><a href="releases/{{i.id}}">{{i.title}}</a></td>
+            </tr>
+
+        {% endfor %}
+    </table>
 
     <p>Do you want to log out? <a href="{% url 'login' %}">Log Out here.</a> </p>
 
