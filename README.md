@@ -28,3 +28,11 @@ The website will keep track of the best releases
     * Clean, automate and back-up git repo, through all remote devices
     * Clean up code
 8. Plan ahead
+
+## HOW TO CONTRIBUTE
+
+1. make a new local branch, title it something relevant to what your plan on doing with it.
+2. commit as many things as you want, keep your commits small and concise, so its easy to see what you changed in each one.
+3. push the local branch to remote, give the remote branch the same you did locally.
+4. create a pull request from your newly created branch to the development branch, our team will look at your request and validate or deny it.
+5. delete your branch if the final reviewer has not done so yet.
