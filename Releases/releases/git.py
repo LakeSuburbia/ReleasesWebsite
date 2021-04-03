@@ -8,8 +8,12 @@ else:
     for i  in range(1,len(sys.argv)):
         message = message + sys.argv[i] + " "
     message=message+"\""
-    
-    os.system("git checkout sander")
+    try:
+        os.system("git branch sander")
+        os.system("git commit sander")
+    except:
+        os.system("git commit sander")
+
     os.system("git add .")
     os.system('git commit -m '+message)
     print("Committed with message:")
