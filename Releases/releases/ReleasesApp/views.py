@@ -34,9 +34,11 @@ class ReleaseViewSet(viewsets.ModelViewSet):
 def index(request):
     # Authenticated users view their inbox
     if request.user.is_authenticated:
+        releases = Release.objects.all()
         return render(request, "releases/index.html", {
             "firstname": request.user.first_name,
             "lastname": request.user.last_name,
+            "releases":releases
         })
 
     # Everyone else is prompted to sign in
@@ -113,14 +115,6 @@ def add_release(request):
     else:
         return render(request, "releases/add_release.html")
 
-
-
-def releases_view(request):
-    releases = Release.objects.all()
-    return render(request, "releases/releases.html", 
-    {
-        "releases":releases
-    })
 
 def release_view(request, releaseid):
 
