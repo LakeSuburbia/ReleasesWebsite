@@ -16,7 +16,7 @@ The website will keep track of the best releases
     * User Logout V
     * Releases Add V
     * Releases View V
-    * Releases Edit
+    * Releases Edit V
     * Releases Vote
 4. Create and utilize API
     * Basic API functions V
