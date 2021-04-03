@@ -134,3 +134,20 @@ def release_view(request, releaseid):
             })
     else:
         return render(request, "releases/releases.html")
+
+def edit_release(request, releaseid):
+    release=Release.objects.get(id=releaseid)
+    if request.method == "POST":
+        data = {
+        "id" : releaseid, 
+        "release_date" : request.POST["release_date"],
+        "artist" : request.POST["artist"],
+        "title" : request.POST["title"]
+        }
+
+        requests.put('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "releases/edit_releases.html", {
+            release:release
+        })

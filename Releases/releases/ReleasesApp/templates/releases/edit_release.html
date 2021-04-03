@@ -1,0 +1,25 @@
+{% extends "releases/layout.html" %}
+
+{% block body %}
+
+    <h2>ADD A RELEASE</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'edit_release' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" type="text" name="artist" placeholder={{release.artist}}>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="title" placeholder={{release.title}}>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="date" name="release_date" placeholder={{release.release_date}}>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Register">
+    </form>
+
+{% endblock %}
