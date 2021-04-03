@@ -1,6 +1,8 @@
 import sys
 import os
 
+user = "sander"
+
 if len(sys.argv) < 2:
     print("You should add a message!")
 else:
@@ -8,14 +10,10 @@ else:
     for i  in range(1,len(sys.argv)):
         message = message + sys.argv[i] + " "
     message=message+"\""
-    try:
-        os.system("git branch sander")
-        os.system("git checkout sander")
-    except:
-        os.system("git checkout sander")
-
+    os.system("git checkout -b "+user)
     os.system("git add .")
     os.system('git commit -m '+message)
     os.system('git push')
     print("Committed with message:")
     print(message)
+
