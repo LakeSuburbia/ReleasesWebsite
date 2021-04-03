@@ -3,6 +3,9 @@ import os
 
 user = "mattis"
 
+
+
+
 if len(sys.argv) < 2:
     print("You should add a message!")
 else:
