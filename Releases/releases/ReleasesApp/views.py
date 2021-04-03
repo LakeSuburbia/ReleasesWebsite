@@ -109,7 +109,7 @@ def add_release(request):
         }
 
         requests.post('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("releases"))
     else:
         return render(request, "releases/add_release.html")
 
@@ -138,16 +138,16 @@ def release_view(request, releaseid):
 def edit_release(request, releaseid):
     release=Release.objects.get(id=releaseid)
     if request.method == "POST":
-        data = {
-        "id" : releaseid, 
-        "release_date" : request.POST["release_date"],
-        "artist" : request.POST["artist"],
-        "title" : request.POST["title"]
-        }
+        release.release_date = request.POST["release_date"]
+        release.artist = request.POST["artist"]
+        release.title = request.POST["title"]
+        release.save()
 
-        requests.put('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("releases"))
     else:
-        return render(request, "releases/edit_releases.html", {
-            release:release
+        return render(request, "releases/edit_release.html", {
+            "id":releaseid,
+            "title":release.title,
+            "artist":release.artist,
+            "release_date":release.release_date
         })
