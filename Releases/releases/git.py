@@ -10,9 +10,9 @@ else:
     message=message+"\""
     try:
         os.system("git branch sander")
-        os.system("git commit sander")
+        os.system("git checkout sander")
     except:
-        os.system("git commit sander")
+        os.system("git checkout sander")
 
     os.system("git add .")
     os.system('git commit -m '+message)
