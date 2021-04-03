@@ -1,0 +1,25 @@
+{% extends "releases/layout.html" %}
+
+{% block body %}
+
+    <h2>EDIT {{artist}} - {{title}}</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'edit_release' id %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" type="text" name="artist" placeholder={{artist}}>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="title" placeholder={{title}}>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="date" name="release_date" placeholder={{release_date}}>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Edit">
+    </form>
+
+{% endblock %}
