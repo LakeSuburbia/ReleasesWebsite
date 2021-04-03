@@ -13,6 +13,6 @@ else:
     os.system("git checkout -b "+user)
     os.system("git add .")
     os.system('git commit -m '+message)
-    os.system('git push --set-upstream origin '+message)
+    os.system('git push --set-upstream origin '+user)
     print("Committed with message:")
     print(message)
