@@ -34,9 +34,11 @@ class ReleaseViewSet(viewsets.ModelViewSet):
 def index(request):
     # Authenticated users view their inbox
     if request.user.is_authenticated:
+        releases = Release.objects.all()
         return render(request, "releases/index.html", {
             "firstname": request.user.first_name,
             "lastname": request.user.last_name,
+            "releases":releases
         })
 
     # Everyone else is prompted to sign in
@@ -109,18 +111,10 @@ def add_release(request):
         }
 
         requests.post('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("releases"))
     else:
         return render(request, "releases/add_release.html")
 
-
-
-def releases_view(request):
-    releases = Release.objects.all()
-    return render(request, "releases/releases.html", 
-    {
-        "releases":releases
-    })
 
 def release_view(request, releaseid):
 
@@ -134,3 +128,20 @@ def release_view(request, releaseid):
             })
     else:
         return render(request, "releases/releases.html")
+
+def edit_release(request, releaseid):
+    release=Release.objects.get(id=releaseid)
+    if request.method == "POST":
+        release.release_date = request.POST["release_date"]
+        release.artist = request.POST["artist"]
+        release.title = request.POST["title"]
+        release.save()
+
+        return HttpResponseRedirect(reverse("releases"))
+    else:
+        return render(request, "releases/edit_release.html", {
+            "id":releaseid,
+            "title":release.title,
+            "artist":release.artist,
+            "release_date":release.release_date
+        })
