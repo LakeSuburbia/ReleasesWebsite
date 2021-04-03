@@ -16,6 +16,6 @@ else:
 
     os.system("git add .")
     os.system('git commit -m '+message)
-    os.system('git push ')
+    os.system('git push')
     print("Committed with message:")
     print(message)
