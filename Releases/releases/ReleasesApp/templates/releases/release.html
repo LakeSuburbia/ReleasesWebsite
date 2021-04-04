@@ -8,6 +8,13 @@
         <div>{{ message }}</div>
     {% endif %}
 
+    <form action="{% url 'release' id %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" type="number" name="score" placeholder="score">
+        </div>
+        <input class="btn btn-primary" type="submit" value="vote">
+    </form>
     
     <p>Do you want to edit this release? <a href="{% url 'edit_release' id %}">Edit release here.</a> </p>
     <p>Do you want to log out? <a href="{% url 'login' %}">Log Out here.</a> </p>
