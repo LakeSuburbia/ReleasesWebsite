@@ -119,21 +119,11 @@ def add_release(request):
 def release_view(request, releaseid):
     if request.user.is_authenticated:
         release = Release.objects.get(id=releaseid)
-        userid = request.user.id
-        user = User.objects.get(id=userid)
 
         if request.method == "POST":
 
-            score = request.POST["score"]
-            releasescore = ReleaseScore.objects.filter(user = user).filter(release = release)
+            vote(request, releaseid)
 
-            if (releasescore):
-                vote = ReleaseScore.objects.filter(user = user).get(release = release)
-                vote.score = score
-                vote.save()
-            else:
-                vote = ReleaseScore.objects.create(user = user, release = release, score = score)
-                vote.save()
             return render(request, "releases/release.html",{
                 "id": release.id,
                 "title": release.title,
@@ -170,18 +160,18 @@ def edit_release(request, releaseid):
             "release_date":release.release_date
         })
 
-def vote(request, releaseid):
-    score = request.score
-    if request.user.is_authenticated:
-        userid = request.user.id
-        if request.method == "POST":
-            release = Release.score.get(user = userid).filter(release = releaseid)
 
-            if (release != None):
-                release.score = score
-                release.save()
-            else:
-                vote = ReleaseScore.objects.create(userid, releaseid, score)
-                vote.save()
-    
-    return HttpResponseRedirect(reverse("releases"))
+def vote(request, releaseid):
+    release = Release.objects.get(id=releaseid)
+    userid = request.user.id
+    user = User.objects.get(id=userid)
+    score = request.POST["score"]
+    releasescore = ReleaseScore.objects.filter(user = user).filter(release = release)
+
+    if (releasescore):
+        vote = ReleaseScore.objects.filter(user = user).get(release = release)
+        vote.score = score
+        vote.save()
+    else:
+        vote = ReleaseScore.objects.create(user = user, release = release, score = score)
+        vote.save()
