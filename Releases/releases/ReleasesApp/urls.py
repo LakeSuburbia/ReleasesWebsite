@@ -15,5 +15,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('add_release', views.add_release,name="add_release"),
     path('releases/<int:releaseid>', views.release_view, name="release"),
-    path('edit_release/<int:releaseid>', views.edit_release, name="edit_release")
+    path('edit_release/<int:releaseid>', views.edit_release, name="edit_release"),
+    path('vote/<int:releaseid>', views.vote, name="vote")
 ]
