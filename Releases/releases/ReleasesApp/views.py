@@ -9,6 +9,8 @@ from django.db import IntegrityError
 from .models import *
 import json
 import requests
+import schedule
+import time
 
 
 
@@ -32,6 +34,7 @@ class ReleaseViewSet(viewsets.ModelViewSet):
 
 
 def index(request):
+    calculateAverageScore()
     # Authenticated users view their inbox
     if request.user.is_authenticated:
         releases = Release.objects.all()
@@ -175,3 +178,25 @@ def vote(request, releaseid):
     else:
         vote = ReleaseScore.objects.create(user = user, release = release, score = score)
         vote.save()
+
+
+def calculateAverageScore():
+    releases = Release.objects.all()
+    for release in releases:
+        scores = ReleaseScore.objects.filter(release=release)
+        tot = 0
+        count = 0
+        for score in scores:
+            tot = tot + score.score
+            count += 1
+        if count > 0:
+            release.averagescore = tot/count
+            release.hottestvalue = tot
+            release.save()
+        else:
+            release.averagescore = -1
+            release.hottestvalue = -1
+            release.save()
+
+    
+
