@@ -14,6 +14,7 @@
             <th>Release Date</th>
             <th>Artist</th>
             <th>Title</th>
+            <th>Average Score</th>
         </tr>
         {% for i in releases %}
         
@@ -21,6 +22,11 @@
                 <td>{{i.release_date}}</td>
                 <td>{{i.artist}}</td>
                 <td><a href="releases/{{i.id}}">{{i.title}}</a></td>
+                {% if i.averagescore >= 0 %}
+                <td>{{i.averagescore}}</td>
+                {% else %}
+                <td> / </td>
+                {% endif %}
             </tr>
 
         {% endfor %}
