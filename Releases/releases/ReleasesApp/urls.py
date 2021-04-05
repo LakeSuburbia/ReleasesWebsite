@@ -3,8 +3,8 @@ from django.urls import path, include
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
 router.register(r'releases', views.ReleaseViewSet)
+router.register(r'scores', views.ScoreViewSet)
 
 urlpatterns = [
     path("", views.index, name="index"),

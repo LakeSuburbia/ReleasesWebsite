@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect
 from rest_framework import viewsets, permissions
 from django.db.models import Sum, Avg
-from .serializers import UserSerializer, ReleaseSerializer
+from .serializers import ReleaseSerializer, ScoreSerializer
 from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.db import IntegrityError
@@ -15,12 +15,12 @@ import time
 
 
 # views API
-class UserViewSet(viewsets.ModelViewSet):
+class ScoreViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+    queryset = ReleaseScore.objects.all()
+    serializer_class = ScoreSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
