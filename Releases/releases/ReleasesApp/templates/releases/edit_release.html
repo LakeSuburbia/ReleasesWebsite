@@ -4,6 +4,10 @@
 
     <h2>EDIT {{artist}} - {{title}}</h2>
 
+    <p><a href="{% url 'login' %}">BACK TO HOME</a> </p>
+    <p><a href="{% url 'edit_release' id %}">EDIT RELEASE</a> </p>
+    <p> <a href="{% url 'login' %}">LOG OUT</a> </p>
+
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
