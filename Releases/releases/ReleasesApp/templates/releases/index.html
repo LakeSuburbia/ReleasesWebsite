@@ -4,6 +4,7 @@
 {% block body %}
 
 <h2>WELCOME {{ firstname }} {{lastname}}</h2>
+<p><a href="{% url 'login' %}">LOG OUT</a></p>
 
     {% if message %}
         <div>{{ message }}</div>
@@ -14,6 +15,7 @@
             <th>Release Date</th>
             <th>Artist</th>
             <th>Title</th>
+            <th>Average Score</th>
         </tr>
         {% for i in releases %}
         
@@ -21,12 +23,16 @@
                 <td>{{i.release_date}}</td>
                 <td>{{i.artist}}</td>
                 <td><a href="releases/{{i.id}}">{{i.title}}</a></td>
+                {% if i.averagescore >= 0 %}
+                <td>{{i.averagescore}}</td>
+                {% else %}
+                <td> / </td>
+                {% endif %}
             </tr>
 
         {% endfor %}
     </table>
 
-    <p>Do you want to log out? <a href="{% url 'login' %}">Log Out here.</a> </p>
 
     
 
