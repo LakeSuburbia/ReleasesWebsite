@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Release, ReleaseScore
+from .models import Release, ReleaseScore, User
 
 
 class ReleaseSerializer(serializers.ModelSerializer):
@@ -23,8 +23,8 @@ class ScoreSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         score = ReleaseScore.objects.create(
-            user=validated_data['user'],
-            release=validated_data['release'],
+            user=User.objects.filter(username__iexact=validated_data['user']),
+            release=Release.objects.filter(title_iexact=validated_data['release']),
             score=validated_data['score'],
         )
         return score
