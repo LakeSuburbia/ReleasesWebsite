@@ -125,31 +125,29 @@ def add_release(request):
 def release_view(request, releaseid):
     if request.user.is_authenticated:
         release = Release.objects.get(id=releaseid)
+        user = request.user
 
         if request.method == "POST":
 
             vote(request, releaseid)
+            calculateAverageScore(release)
+            score = getCurrentScore(user, release)
+            
 
             return render(request, "releases/release.html",{
                 "id": release.id,
                 "title": release.title,
                 "artist": release.artist,
                 "release_date": release.release_date,
+                "score": score,
+                "averagescore": release.averagescore
                 })
 
         elif release:
-            userid = request.user.id
-            user = User.objects.get(id=userid)
-
-            if ReleaseScore.objects.filter(user = user).filter(release = release).exists():
-                score = ReleaseScore.objects.filter(user = user).get(release = release).score
-                score
-            else:
-                score = 0
 
             calculateAverageScore(release)
+            score = getCurrentScore(user, release)
             
-        
             return render(request, "releases/release.html",{
                 "id": release.id,
                 "title": release.title,
@@ -218,5 +216,11 @@ def calculateAverageScore(release):
         release.hottestvalue = -1
         release.save()
 
+
+def getCurrentScore(user, release):
+    if ReleaseScore.objects.filter(user = user).filter(release = release).exists():
+        return ReleaseScore.objects.filter(user = user).get(release = release).score
+    else:
+        return 0
     
 
