@@ -107,7 +107,6 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-
 def add_release(request):
     if request.method == "POST":
         data = {
@@ -125,10 +124,8 @@ def add_release(request):
 def release_view(request, releaseid):
     if request.user.is_authenticated:
         release = Release.objects.get(id=releaseid)
-        user = request.user
 
         if request.method == "POST":
-
             vote(request, releaseid)
 
         elif not release:
