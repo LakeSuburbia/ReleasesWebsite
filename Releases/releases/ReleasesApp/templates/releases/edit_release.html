@@ -14,13 +14,13 @@
     <form action="{% url 'edit_release' id %}" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <input class="form-control" type="text" name="artist" placeholder={{artist}}>
+            <input class="form-control" type="text" name="artist" value={{artist}}>
         </div>
         <div class="form-group">
-            <input class="form-control" type="text" name="title" placeholder={{title}}>
+            <input class="form-control" type="text" name="title" value={{title}}>
         </div>
         <div class="form-group">
-            <input class="form-control" type="date" name="release_date" placeholder={{release_date}}>
+            <input class="form-control" type="date" name="release_date" value={{release_date}}>
         </div>
         <input class="btn btn-primary" type="submit" value="Edit">
     </form>

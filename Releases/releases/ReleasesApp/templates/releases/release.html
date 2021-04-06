@@ -3,6 +3,7 @@
 {% block body %}
 
     <h2> {{ artist }} - {{ title }} released on: {{release_date}}</h2>
+    
 
     <p><a href="{% url 'index' %}">BACK TO HOME</a> </p>
     <p><a href="{% url 'edit_release' id %}">EDIT RELEASE</a> </p>
@@ -15,7 +16,7 @@
     <form action="{% url 'release' id %}" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <input class="form-control" type="number" name="score" placeholder="score">
+            <input class="form-control" type="number" name="score" value={{score}} min = "0" max = "10">
         </div>
         <input class="btn btn-primary" type="submit" value="vote">
     </form>

@@ -6,6 +6,7 @@ from .serializers import UserSerializer, ReleaseSerializer
 from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.db import IntegrityError
+from django import forms
 from .models import *
 import json
 import requests
@@ -51,6 +52,7 @@ def index(request):
 
 def register(request):
     if request.method == "POST":
+        
         email = request.POST["email"]
         username = request.POST["username"]
         firstname = request.POST["firstname"]
@@ -75,6 +77,7 @@ def register(request):
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
+       
     else:
         return render(request, "releases/register.html")
 
@@ -135,11 +138,21 @@ def release_view(request, releaseid):
                 })
 
         elif release:
+            userid = request.user.id
+            user = User.objects.get(id=userid)
+
+            if ReleaseScore.objects.filter(user = user).filter(release = release).exists():
+                score = ReleaseScore.objects.filter(user = user).get(release = release).score
+                score
+            else:
+                score = 0
+        
             return render(request, "releases/release.html",{
                 "id": release.id,
                 "title": release.title,
                 "artist": release.artist,
                 "release_date": release.release_date,
+                "score": score
                 })
         else:
             return render(request, "releases/releases.html")
