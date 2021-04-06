@@ -221,6 +221,7 @@ def getCurrentScore(user, release):
     if ReleaseScore.objects.filter(user = user).filter(release = release).exists():
         return ReleaseScore.objects.filter(user = user).get(release = release).score
     else:
-        return 0
+        return ""
     
 
+#ef deleteVote(user, release):
