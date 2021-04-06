@@ -3,7 +3,7 @@
 {% block body %}
 
     <h2> {{ artist }} - {{ title }} released on: {{release_date}}</h2>
-    
+    Average score is: {{averagescore}}
 
     <p><a href="{% url 'index' %}">BACK TO HOME</a> </p>
     <p><a href="{% url 'edit_release' id %}">EDIT RELEASE</a> </p>
