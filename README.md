@@ -18,9 +18,9 @@ The website will keep track of the best releases
     * Releases View V
     * Releases Edit V
     * Releases Vote V
-    * Releases Score_overview 
-    * Releases Global_score
-    4. Create and utilize API
+    * Releases Score_overview V
+    * Releases Global_score V
+4. Create and utilize API
     * Basic API functions V
     * Replace as much view functions with API calls
     * Load our data using the API

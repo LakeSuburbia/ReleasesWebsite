@@ -7,6 +7,7 @@ from .serializers import ReleaseSerializer, ScoreSerializer
 from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.db import IntegrityError
+from django import forms
 from .models import *
 import json
 import requests
@@ -33,7 +34,7 @@ class ReleaseViewSet(viewsets.ModelViewSet):
 
 
 def index(request):
-    calculateAverageScore()
+    calculateAverageScoreOfSet()
     # Authenticated users view their inbox
     if request.user.is_authenticated:
         releases = Release.objects.all()
@@ -50,6 +51,7 @@ def index(request):
 
 def register(request):
     if request.method == "POST":
+        
         email = request.POST["email"]
         username = request.POST["username"]
         firstname = request.POST["firstname"]
@@ -74,6 +76,7 @@ def register(request):
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
+       
     else:
         return render(request, "releases/register.html")
 
@@ -120,25 +123,37 @@ def add_release(request):
 def release_view(request, releaseid):
     if request.user.is_authenticated:
         release = Release.objects.get(id=releaseid)
+        user = request.user
 
         if request.method == "POST":
 
             vote(request, releaseid)
+            calculateAverageScore(release)
+            score = getCurrentScore(user, release)
+            
 
             return render(request, "releases/release.html", {
                 "id": release.id,
                 "title": release.title,
                 "artist": release.artist,
                 "release_date": release.release_date,
-            })
+                "score": score,
+                "averagescore": release.averagescore
+                })
 
         elif release:
-            return render(request, "releases/release.html", {
+
+            calculateAverageScore(release)
+            score = getCurrentScore(user, release)
+            
+            return render(request, "releases/release.html",{
                 "id": release.id,
                 "title": release.title,
                 "artist": release.artist,
                 "release_date": release.release_date,
-            })
+                "score": score,
+                "averagescore": release.averagescore
+                })
         else:
             return render(request, "releases/releases.html")
 
@@ -177,13 +192,27 @@ def vote(request, releaseid):
         vote.save()
 
 
-def calculateAverageScore():
-    for release in Release.objects.all():
-        totaalaantal = ReleaseScore.objects.filter(release=release).count()
-        if totaalaantal > 0:
-            release.averagescore = ReleaseScore.objects.filter(release=release).aggregate(Avg('score'))['score__avg']
-            release.hottestvalue = totaalaantal
-        else:
-            release.averagescore = -1
-            release.hottestvalue = -1
-        release.save()
+
+def calculateAverageScoreOfSet():
+    releases = Release.objects.all()
+    for release in releases:
+        calculateAverageScore(release)
+    
+def calculateAverageScore(release):
+    totaalaantal = ReleaseScore.objects.filter(release=release).count()
+    if totaalaantal > 0:
+        release.averagescore = ReleaseScore.objects.filter(release=release).aggregate(Avg('score'))['score__avg']
+        release.hottestvalue = totaalaantal
+    else:
+        release.averagescore = -1
+        release.hottestvalue = -1
+    release.save()
+
+
+def getCurrentScore(user, release):
+    if ReleaseScore.objects.filter(user = user).filter(release = release).exists():
+        return ReleaseScore.objects.filter(user = user).get(release = release).score
+    else:
+        return 0
+    
+
