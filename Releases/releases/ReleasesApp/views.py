@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect
 from rest_framework import viewsets, permissions
-from .serializers import UserSerializer, ReleaseSerializer
+from django.db.models import Sum, Avg
+from .serializers import ReleaseSerializer, ScoreSerializer
 from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.db import IntegrityError
@@ -14,14 +15,13 @@ import schedule
 import time
 
 
-
-#views API
-class UserViewSet(viewsets.ModelViewSet):
+# views API
+class ScoreViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+    queryset = ReleaseScore.objects.all()
+    serializer_class = ScoreSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
@@ -31,7 +31,6 @@ class ReleaseViewSet(viewsets.ModelViewSet):
     """
     queryset = Release.objects.all().order_by('release_date')
     serializer_class = ReleaseSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 def index(request):
@@ -42,7 +41,7 @@ def index(request):
         return render(request, "releases/index.html", {
             "firstname": request.user.first_name,
             "lastname": request.user.last_name,
-            "releases":releases
+            "releases": releases
         })
 
     # Everyone else is prompted to sign in
@@ -107,13 +106,12 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-
 def add_release(request):
     if request.method == "POST":
         data = {
-        "release_date" : request.POST["release_date"],
-        "artist" : request.POST["artist"],
-        "title" : request.POST["title"]
+            "release_date": request.POST["release_date"],
+            "artist": request.POST["artist"],
+            "title": request.POST["title"]
         }
 
         requests.post('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
@@ -134,7 +132,7 @@ def release_view(request, releaseid):
             score = getCurrentScore(user, release)
             
 
-            return render(request, "releases/release.html",{
+            return render(request, "releases/release.html", {
                 "id": release.id,
                 "title": release.title,
                 "artist": release.artist,
@@ -159,10 +157,9 @@ def release_view(request, releaseid):
         else:
             return render(request, "releases/releases.html")
 
-        
 
 def edit_release(request, releaseid):
-    release=Release.objects.get(id=releaseid)
+    release = Release.objects.get(id=releaseid)
     if request.method == "POST":
         release.release_date = request.POST["release_date"]
         release.artist = request.POST["artist"]
@@ -172,10 +169,10 @@ def edit_release(request, releaseid):
         return HttpResponseRedirect(reverse("releases"))
     else:
         return render(request, "releases/edit_release.html", {
-            "id":releaseid,
-            "title":release.title,
-            "artist":release.artist,
-            "release_date":release.release_date
+            "id": releaseid,
+            "title": release.title,
+            "artist": release.artist,
+            "release_date": release.release_date
         })
 
 
@@ -184,14 +181,14 @@ def vote(request, releaseid):
     userid = request.user.id
     user = User.objects.get(id=userid)
     score = request.POST["score"]
-    releasescore = ReleaseScore.objects.filter(user = user).filter(release = release)
+    releasescore = ReleaseScore.objects.filter(user=user).filter(release=release)
 
     if (releasescore):
-        vote = ReleaseScore.objects.filter(user = user).get(release = release)
+        vote = ReleaseScore.objects.filter(user=user).get(release=release)
         vote.score = score
         vote.save()
     else:
-        vote = ReleaseScore.objects.create(user = user, release = release, score = score)
+        vote = ReleaseScore.objects.create(user=user, release=release, score=score)
         vote.save()
 
 

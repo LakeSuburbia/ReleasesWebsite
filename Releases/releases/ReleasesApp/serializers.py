@@ -1,29 +1,8 @@
 from rest_framework import serializers
-from .models import User, Release
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
-    
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
-
-        return attrs
-
-    def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            password = validated_data['password']
-        )
-        return user
+from .models import Release, ReleaseScore, User
 
 
-class ReleaseSerializer(serializers.HyperlinkedModelSerializer):
+class ReleaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Release
         fields = ['release_date', 'title', 'artist']
@@ -35,3 +14,17 @@ class ReleaseSerializer(serializers.HyperlinkedModelSerializer):
             artist=validated_data['artist'],
         )
         return release
+
+
+class ScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReleaseScore
+        fields = ['user', 'release', 'score']
+
+    def create(self, validated_data):
+        score = ReleaseScore.objects.create(
+            user=User.objects.filter(username__iexact=validated_data['user']),
+            release=Release.objects.filter(title_iexact=validated_data['release']),
+            score=validated_data['score'],
+        )
+        return score
