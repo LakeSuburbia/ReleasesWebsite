@@ -16,5 +16,6 @@ urlpatterns = [
     path('add_release', views.add_release,name="add_release"),
     path('releases/<int:releaseid>', views.release_view, name="release"),
     path('edit_release/<int:releaseid>', views.edit_release, name="edit_release"),
-    path('delete_vote/<int:releaseid>', views.delete_vote, name="delete_vote")
+    path('delete_vote/<int:releaseid>', views.delete_vote, name="delete_vote"),
+    path('profile/<username>', views.profile_view, name="profile"),
 ]
