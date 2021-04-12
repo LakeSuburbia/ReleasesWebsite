@@ -216,14 +216,11 @@ def render_release(request, release):
 
 def profile_view(request, username):
     if request.user.is_authenticated:
-        if request.user.username == username:
-            user = User.objects.get(username__iexact=username)
-            userscores = ReleaseScore.objects.filter(user__username__iexact=username)
-            return render(request, "releases/profile.html",
-                          {
-                              "firstname": user.first_name,
-                              "lastname": user.last_name,
-                              "user": user,
-                              "scores": userscores,
-                          })
-        else: return HttpResponseRedirect(reverse("index"))
+        user = User.objects.get(username__iexact=username)
+        userscores = ReleaseScore.objects.filter(user__username__iexact=username)
+        return render(request, "releases/profile.html",
+                        {
+                            "user": user,
+                            "scores": userscores,
+                            "ownAccount": request.user.username == username
+                        })
