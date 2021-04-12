@@ -4,7 +4,7 @@
 {% block body %}
 
 <h2>Welcome {{ firstname }} {{lastname}}</h2>
-<p><a href="profile/{{username}}">MY PROFILE</a></p>
+
 <p><a href="{% url 'add_release' %}">ADD RELEASE</a> </p>
 <p> <a href="{% url 'login' %}">LOG OUT</a> </p>
 

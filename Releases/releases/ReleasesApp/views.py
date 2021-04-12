@@ -39,7 +39,6 @@ def index(request):
     if request.user.is_authenticated:
         releases = Release.objects.all()
         return render(request, "releases/index.html", {
-            "username": request.user.username,
             "firstname": request.user.first_name,
             "lastname": request.user.last_name,
             "releases": releases
@@ -212,18 +211,3 @@ def render_release(request, release):
                 "score": score,
                 "averagescore": release.averagescore
                 })
-
-
-def profile_view(request, username):
-    if request.user.is_authenticated:
-        if request.user.username == username:
-            user = User.objects.get(username__iexact=username)
-            userscores = ReleaseScore.objects.filter(user__username__iexact=username)
-            return render(request, "releases/profile.html",
-                          {
-                              "firstname": user.first_name,
-                              "lastname": user.last_name,
-                              "user": user,
-                              "scores": userscores,
-                          })
-        else: return HttpResponseRedirect(reverse("index"))
