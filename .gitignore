@@ -2,3 +2,7 @@
 /.idea
 
 Releases/releases/db.sqlite3
+*.pyc
+Releases/releases/ReleasesApp/__pycache__/models.cpython-39.pyc
+*.sqlite3
+Releases/releases/db.sqlite3
