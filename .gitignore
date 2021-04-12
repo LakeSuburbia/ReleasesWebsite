@@ -2,3 +2,5 @@
 /.idea
 
 Releases/releases/db.sqlite3
+*.pyc
+*.sqlite3
