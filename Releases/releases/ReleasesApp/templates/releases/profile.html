@@ -5,8 +5,10 @@
     <h2>{{user.username}} joined on {{user.date_joined}}</h2>
     <div>
         <h3>Personal information</h3>
-        <p>{{firstname}} {{lastname}}</p>
+        <p>{{user.first_name}} {{user.last_name}}</p>
+        {% if ownAccount %}
         <p>{{user.email}}</p>
+        {% endif %}
     </div>
 
     <div>
