@@ -26,3 +26,7 @@ class ReleaseScore(models.Model):
     release = models.ForeignKey('Release', on_delete=models.CASCADE)
     score = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(10)])
 
+
+class Follows(models.Model):
+    follower = models.ForeignKey('User', on_delete=models.CASCADE)
+    followee = models.ForeignKey('User', on_delete=models.CASCADE)
