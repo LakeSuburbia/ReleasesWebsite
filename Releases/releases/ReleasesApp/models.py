@@ -28,5 +28,5 @@ class ReleaseScore(models.Model):
 
 
 class Follows(models.Model):
-    follower = models.ForeignKey('User', on_delete=models.CASCADE)
-    followee = models.ForeignKey('User', on_delete=models.CASCADE)
+    follower = models.ForeignKey('User', on_delete=models.CASCADE, related_name="follower")
+    followee = models.ForeignKey('User', on_delete=models.CASCADE, related_name="followee")
