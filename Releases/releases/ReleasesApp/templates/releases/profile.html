@@ -1,0 +1,29 @@
+{% extends "releases/layout.html" %}
+
+{% block body %}
+
+    <h2>{{user.username}} joined on {{user.date_joined}}</h2>
+    <div>
+        <h3>Personal information</h3>
+        <p>{{user.first_name}} {{user.last_name}}</p>
+        {% if ownAccount %}
+        <p>{{user.email}}</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <h2>Scores</h2>
+        <ul>
+            {% for score in scores %}
+            <li>
+                <tr>
+                    <td>{{score.release}}</td>
+                    <td>{{score.score}}</td>
+                </tr>
+            </li>
+
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

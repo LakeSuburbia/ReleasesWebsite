@@ -114,11 +114,26 @@ def logout_view(request):
 
 def add_release(request):
     if request.method == "POST":
+        
+        releasedate=request.POST["release_date"]
+        artist=request.POST["artist"]
+        title=request.POST["title"]
+
+        occurance = Release.objects.filter(release_date=releasedate, artist=artist).count()
+        occurance += Release.objects.filter(artist=artist, title=title).count() 
+        occurance += Release.objects.filter(title=title, release_date=releasedate).count()
+
+        if occurance > 0:
+            return render(request, "releases/add_release.html", ({
+                "message": "This release exists already"
+            }))
+
         data = {
             "release_date": request.POST["release_date"],
             "artist": request.POST["artist"],
             "title": request.POST["title"],
         }
+        
 
         requests.post(
             "http://127.0.0.1:8000/restapi/releases/", data, auth=("ADMIN", "ADMIN")

@@ -2,10 +2,6 @@
 /.idea
 
 Releases/releases/db.sqlite3
-Releases/releases/db.sqlite3
-Releases/releases/releases/__pycache__/settings.cpython-39.pyc
-Releases/releases/ReleasesApp/__pycache__/models.cpython-39.pyc
-Releases/releases/ReleasesApp/__pycache__/serializers.cpython-39.pyc
-Releases/releases/ReleasesApp/__pycache__/urls.cpython-39.pyc
-Releases/releases/ReleasesApp/__pycache__/views.cpython-39.pyc
-Releases/releases/ReleasesApp/migrations/0004_auto_20210414_1643.py
+
+*.pyc
+*.sqlite3
