@@ -62,19 +62,13 @@ def register(request):
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request,
-                "releases/register.html",
-                {"message": "Passwords must match."}
+                request, "releases/register.html", {"message": "Passwords must match."}
             )
 
         # Attempt to create new user
         try:
             user = User.objects.create_user(
-                username,
-                email,
-                password,
-                first_name=firstname,
-                last_name=lastname
+                username, email, password, first_name=firstname, last_name=lastname
             )
             user.save()
         except IntegrityError as e:
@@ -127,9 +121,7 @@ def add_release(request):
         }
 
         requests.post(
-            "http://127.0.0.1:8000/restapi/releases/",
-            data,
-            auth=("ADMIN", "ADMIN")
+            "http://127.0.0.1:8000/restapi/releases/", data, auth=("ADMIN", "ADMIN")
         )
         return HttpResponseRedirect(reverse("releases"))
     else:
@@ -175,17 +167,14 @@ def vote(request, releaseid):
     release = Release.objects.get(id=releaseid)
     user = request.user
     score = request.POST["score"]
-    releasescore = ReleaseScore.objects.filter(
-        user=user).filter(release=release)
+    releasescore = ReleaseScore.objects.filter(user=user).filter(release=release)
 
     if releasescore:
-        vote = ReleaseScore.objects.filter(
-            user=user).get(release=release)
+        vote = ReleaseScore.objects.filter(user=user).get(release=release)
         vote.score = score
         vote.save()
     else:
-        vote = ReleaseScore.objects.create(
-            user=user, release=release, score=score)
+        vote = ReleaseScore.objects.create(user=user, release=release, score=score)
         vote.save()
 
 
@@ -196,11 +185,9 @@ def calculateAverageScoreOfSet():
 
 
 def calculateAverageScore(release):
-    totaalaantal = ReleaseScore.objects.filter(
-        release=release).count()
+    totaalaantal = ReleaseScore.objects.filter(release=release).count()
     if totaalaantal > 0:
-        release.averagescore = ReleaseScore.objects.filter(
-            release=release).aggregate(
+        release.averagescore = ReleaseScore.objects.filter(release=release).aggregate(
             Avg("score")
         )["score__avg"]
         release.hottestvalue = totaalaantal
@@ -212,8 +199,7 @@ def calculateAverageScore(release):
 
 def getCurrentScore(user, release):
     if ReleaseScore.objects.filter(user=user).filter(release=release).exists():
-        return ReleaseScore.objects.filter(
-            user=user).get(release=release).score
+        return ReleaseScore.objects.filter(user=user).get(release=release).score
     else:
         return ""
 
