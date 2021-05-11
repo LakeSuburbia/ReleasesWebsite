@@ -3,8 +3,8 @@ from django.urls import path, include
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'releases', views.ReleaseViewSet)
-router.register(r'scores', views.ScoreViewSet)
+router.register(r"releases", views.ReleaseViewSet)
+router.register(r"scores", views.ScoreViewSet)
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -17,5 +17,4 @@ urlpatterns = [
     path('releases/<int:releaseid>', views.release_view, name="release"),
     path('edit_release/<int:releaseid>', views.edit_release, name="edit_release"),
     path('delete_vote/<int:releaseid>', views.delete_vote, name="delete_vote"),
-    path('profile/<username>', views.profile_view, name="profile"),
 ]

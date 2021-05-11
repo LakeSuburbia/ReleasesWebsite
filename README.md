@@ -20,11 +20,14 @@ The website will keep track of the best releases
     * Releases Vote V
     * Releases Score_overview V
     * Releases Global_score V
+    * User Profile page V
+    * Releases duplicate protection
 4. Create and utilize API
     * Basic API functions V
     * Replace as much view functions with API calls
     * Load our data using the API
     * Load other data using the API (Spotify?)
+    * Duplicate protection
 6. Organise
     * Shell scripts to automate all standard procedures
     * Clean, automate and back-up git repo, through all remote devices
