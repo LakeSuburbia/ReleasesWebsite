@@ -20,6 +20,7 @@ class ScoreViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
+
     queryset = ReleaseScore.objects.all()
     serializer_class = ScoreSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -29,7 +30,8 @@ class ReleaseViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows releases to be viewed or edited.
     """
-    queryset = Release.objects.all().order_by('release_date')
+
+    queryset = Release.objects.all().order_by("release_date")
     serializer_class = ReleaseSerializer
 
 
@@ -38,11 +40,15 @@ def index(request):
     # Authenticated users view their inbox
     if request.user.is_authenticated:
         releases = Release.objects.all()
-        return render(request, "releases/index.html", {
-            "firstname": request.user.first_name,
-            "lastname": request.user.last_name,
-            "releases": releases
-        })
+        return render(
+            request,
+            "releases/index.html",
+            {
+                "firstname": request.user.first_name,
+                "lastname": request.user.last_name,
+                "releases": releases,
+            },
+        )
 
     # Everyone else is prompted to sign in
     else:
@@ -51,7 +57,7 @@ def index(request):
 
 def register(request):
     if request.method == "POST":
-        
+
         email = request.POST["email"]
         username = request.POST["username"]
         firstname = request.POST["firstname"]
@@ -61,22 +67,26 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "releases/register.html", {
-                "message": "Passwords must match."
-            })
+            return render(
+                request, "releases/register.html", {"message": "Passwords must match."}
+            )
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password, first_name=firstname, last_name=lastname)
+            user = User.objects.create_user(
+                username, email, password, first_name=firstname, last_name=lastname
+            )
             user.save()
         except IntegrityError as e:
             print(e)
-            return render(request, "releases/register.html", {
-                "message": "Email address or username already taken."
-            })
+            return render(
+                request,
+                "releases/register.html",
+                {"message": "Email address or username already taken."},
+            )
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
-       
+
     else:
         return render(request, "releases/register.html")
 
@@ -94,9 +104,11 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "releases/login.html", {
-                "message": "Invalid email and/or password."
-            })
+            return render(
+                request,
+                "releases/login.html",
+                {"message": "Invalid email and/or password."},
+            )
     else:
         return render(request, "releases/login.html")
 
@@ -111,10 +123,12 @@ def add_release(request):
         data = {
             "release_date": request.POST["release_date"],
             "artist": request.POST["artist"],
-            "title": request.POST["title"]
+            "title": request.POST["title"],
         }
 
-        requests.post('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
+        requests.post(
+            "http://127.0.0.1:8000/restapi/releases/", data, auth=("ADMIN", "ADMIN")
+        )
         return HttpResponseRedirect(reverse("releases"))
     else:
         return render(request, "releases/add_release.html")
@@ -132,7 +146,6 @@ def release_view(request, releaseid):
 
         return render_release(request, release)
 
-        
 
 def edit_release(request, releaseid):
     release = Release.objects.get(id=releaseid)
@@ -144,12 +157,16 @@ def edit_release(request, releaseid):
 
         return HttpResponseRedirect(reverse("releases"))
     else:
-        return render(request, "releases/edit_release.html", {
-            "id": releaseid,
-            "title": release.title,
-            "artist": release.artist,
-            "release_date": release.release_date
-        })
+        return render(
+            request,
+            "releases/edit_release.html",
+            {
+                "id": releaseid,
+                "title": release.title,
+                "artist": release.artist,
+                "release_date": release.release_date,
+            },
+        )
 
 
 def vote(request, releaseid):
@@ -158,7 +175,7 @@ def vote(request, releaseid):
     score = request.POST["score"]
     releasescore = ReleaseScore.objects.filter(user=user).filter(release=release)
 
-    if (releasescore):
+    if releasescore:
         vote = ReleaseScore.objects.filter(user=user).get(release=release)
         vote.score = score
         vote.save()
@@ -167,16 +184,18 @@ def vote(request, releaseid):
         vote.save()
 
 
-
 def calculateAverageScoreOfSet():
     releases = Release.objects.all()
     for release in releases:
         calculateAverageScore(release)
-    
+
+
 def calculateAverageScore(release):
     totaalaantal = ReleaseScore.objects.filter(release=release).count()
     if totaalaantal > 0:
-        release.averagescore = ReleaseScore.objects.filter(release=release).aggregate(Avg('score'))['score__avg']
+        release.averagescore = ReleaseScore.objects.filter(release=release).aggregate(
+            Avg("score")
+        )["score__avg"]
         release.hottestvalue = totaalaantal
     else:
         release.averagescore = -1
@@ -185,29 +204,32 @@ def calculateAverageScore(release):
 
 
 def getCurrentScore(user, release):
-    if ReleaseScore.objects.filter(user = user).filter(release = release).exists():
-        return ReleaseScore.objects.filter(user = user).get(release = release).score
+    if ReleaseScore.objects.filter(user=user).filter(release=release).exists():
+        return ReleaseScore.objects.filter(user=user).get(release=release).score
     else:
         return ""
 
-    
 
 def delete_vote(request, releaseid):
     user = request.user
     release = Release.objects.get(id=releaseid)
-    if ReleaseScore.objects.filter(user = user).filter(release = release).exists():
-        ReleaseScore.objects.filter(user = user).get(release = release).delete()
+    if ReleaseScore.objects.filter(user=user).filter(release=release).exists():
+        ReleaseScore.objects.filter(user=user).get(release=release).delete()
     return render_release(request, release)
 
 
 def render_release(request, release):
     calculateAverageScore(release)
     score = getCurrentScore(request.user, release)
-    return render(request, "releases/release.html",{
-                "id": release.id,
-                "title": release.title,
-                "artist": release.artist,
-                "release_date": release.release_date,
-                "score": score,
-                "averagescore": release.averagescore
-                })
+    return render(
+        request,
+        "releases/release.html",
+        {
+            "id": release.id,
+            "title": release.title,
+            "artist": release.artist,
+            "release_date": release.release_date,
+            "score": score,
+            "averagescore": release.averagescore,
+        },
+    )
