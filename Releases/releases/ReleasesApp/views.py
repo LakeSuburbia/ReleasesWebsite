@@ -39,6 +39,7 @@ def index(request):
     if request.user.is_authenticated:
         releases = Release.objects.all()
         return render(request, "releases/index.html", {
+            "username": request.user.username,
             "firstname": request.user.first_name,
             "lastname": request.user.last_name,
             "releases": releases
@@ -108,11 +109,26 @@ def logout_view(request):
 
 def add_release(request):
     if request.method == "POST":
+        
+        releasedate=request.POST["release_date"]
+        artist=request.POST["artist"]
+        title=request.POST["title"]
+
+        occurance = Release.objects.filter(release_date=releasedate, artist=artist).count()
+        occurance += Release.objects.filter(artist=artist, title=title).count() 
+        occurance += Release.objects.filter(title=title, release_date=releasedate).count()
+
+        if occurance > 0:
+            return render(request, "releases/add_release.html", ({
+                "message": "This release exists already"
+            }))
+
         data = {
-            "release_date": request.POST["release_date"],
-            "artist": request.POST["artist"],
-            "title": request.POST["title"]
+            "release_date": releasedate,
+            "artist": artist,
+            "title": title
         }
+        
 
         requests.post('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
         return HttpResponseRedirect(reverse("releases"))
@@ -211,3 +227,15 @@ def render_release(request, release):
                 "score": score,
                 "averagescore": release.averagescore
                 })
+
+
+def profile_view(request, username):
+    if request.user.is_authenticated:
+        user = User.objects.get(username__iexact=username)
+        userscores = ReleaseScore.objects.filter(user__username__iexact=username)
+        return render(request, "releases/profile.html",
+                        {
+                            "user": user,
+                            "scores": userscores,
+                            "ownAccount": request.user.username == username
+                        })
