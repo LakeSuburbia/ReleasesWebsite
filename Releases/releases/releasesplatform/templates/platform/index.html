@@ -1,0 +1,41 @@
+
+{% extends "platform/layout.html" %}
+
+{% block body %}
+
+<h2>Welcome {{ firstname }} {{lastname}}</h2>
+
+<p><a href="{% url 'add_release' %}">ADD RELEASE</a> </p>
+<p> <a href="{% url 'login' %}">LOG OUT</a> </p>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <table>
+        <tr>
+            <th>Release Date</th>
+            <th>Artist</th>
+            <th>Title</th>
+            <th>Average Score</th>
+        </tr>
+        {% for i in releases %}
+        
+            <tr>
+                <td>{{i.release_date}}</td>
+                <td>{{i.artist}}</td>
+                <td><a href="platform/{{i.id}}">{{i.title}}</a></td>
+                {% if i.averagescore >= 0 %}
+                <td>{{i.averagescore}}</td>
+                {% else %}
+                <td> / </td>
+                {% endif %}
+            </tr>
+
+        {% endfor %}
+    </table>
+
+
+    
+
+{% endblock %}
