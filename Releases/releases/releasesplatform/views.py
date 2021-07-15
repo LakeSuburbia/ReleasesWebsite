@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect
 from rest_framework import viewsets, permissions
-from django.db.models import Avg
+from django.db.models import Sum, Avg
 from .serializers import ReleaseSerializer, ScoreSerializer
+from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.db import IntegrityError
 from .models import *
@@ -32,7 +34,8 @@ def index(request):
     # Authenticated users view their inbox
     if request.user.is_authenticated:
         releases = Release.objects.all()
-        return render(request, "platform/index.html", {
+        return render(request, "releasesplatform/index.html", {
+            "username": request.user.username,
             "firstname": request.user.first_name,
             "lastname": request.user.last_name,
             "releases": releases
@@ -55,7 +58,7 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "platform/register.html", {
+            return render(request, "releasesplatform/register.html", {
                 "message": "Passwords must match."
             })
 
@@ -65,14 +68,14 @@ def register(request):
             user.save()
         except IntegrityError as e:
             print(e)
-            return render(request, "platform/register.html", {
+            return render(request, "releasesplatform/register.html", {
                 "message": "Email address or username already taken."
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
        
     else:
-        return render(request, "platform/register.html")
+        return render(request, "releasesplatform/register.html")
 
 
 def login_view(request):
@@ -88,11 +91,11 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "platform/login.html", {
+            return render(request, "releasesplatform/login.html", {
                 "message": "Invalid email and/or password."
             })
     else:
-        return render(request, "platform/login.html")
+        return render(request, "releasesplatform/login.html")
 
 
 def logout_view(request):
@@ -102,16 +105,31 @@ def logout_view(request):
 
 def add_release(request):
     if request.method == "POST":
-        data = {
-            "release_date": request.POST["release_date"],
-            "artist": request.POST["artist"],
-            "title": request.POST["title"]
-        }
+        
+        releasedate=request.POST["release_date"]
+        artist=request.POST["artist"]
+        title=request.POST["title"]
 
-        requests.post('http://127.0.0.1:8000/restapi/releases/', data, auth=('ADMIN', 'ADMIN'))
+        occurance = Release.objects.filter(release_date=releasedate, artist=artist).count()
+        occurance += Release.objects.filter(artist=artist, title=title).count() 
+        occurance += Release.objects.filter(title=title, release_date=releasedate).count()
+
+        if occurance > 0:
+            return render(request, "releasesplatform/add_release.html", ({
+                "message": "This release exists already"
+            }))
+
+        data = {
+            "release_date": releasedate,
+            "artist": artist,
+            "title": title
+        }
+        
+
+        requests.post('http://127.0.0.1:8000/restapi/releasesplatform/', data, auth=('ADMIN', 'ADMIN'))
         return HttpResponseRedirect(reverse("releases"))
     else:
-        return render(request, "platform/add_release.html")
+        return render(request, "releasesplatform/add_release.html")
 
 
 def release_view(request, releaseid):
@@ -122,7 +140,7 @@ def release_view(request, releaseid):
             vote(request, releaseid)
 
         elif not release:
-            return render(request, "platform/releases.html")
+            return render(request, "releasesplatform/releases.html")
 
         return render_release(request, release)
 
@@ -138,7 +156,7 @@ def edit_release(request, releaseid):
 
         return HttpResponseRedirect(reverse("releases"))
     else:
-        return render(request, "platform/edit_release.html", {
+        return render(request, "releasesplatform/edit_release.html", {
             "id": releaseid,
             "title": release.title,
             "artist": release.artist,
@@ -197,7 +215,7 @@ def delete_vote(request, releaseid):
 def render_release(request, release):
     calculateAverageScore(release)
     score = getCurrentScore(request.user, release)
-    return render(request, "platform/release.html",{
+    return render(request, "releasesplatform/release.html",{
                 "id": release.id,
                 "title": release.title,
                 "artist": release.artist,
@@ -205,3 +223,15 @@ def render_release(request, release):
                 "score": score,
                 "averagescore": release.averagescore
                 })
+
+
+def profile_view(request, username):
+    if request.user.is_authenticated:
+        user = User.objects.get(username__iexact=username)
+        userscores = ReleaseScore.objects.filter(user__username__iexact=username)
+        return render(request, "releasesplatform/profile.html",
+                        {
+                            "user": user,
+                            "scores": userscores,
+                            "ownAccount": request.user.username == username
+                        })

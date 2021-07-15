@@ -1,5 +1,5 @@
 
-{% extends "releases/layout.html" %}
+{% extends "releasesplatform/layout.html" %}
 
 {% block body %}
 
@@ -24,7 +24,7 @@
             <tr>
                 <td>{{i.release_date}}</td>
                 <td>{{i.artist}}</td>
-                <td><a href="releases/{{i.id}}">{{i.title}}</a></td>
+                <td><a href="releasesplatform/{{i.id}}">{{i.title}}</a></td>
                 {% if i.averagescore >= 0 %}
                 <td>{{i.averagescore}}</td>
                 {% else %}

@@ -34,7 +34,6 @@ AUTH_USER_MODEL = 'releasesplatform.User'
 # Application definition
 
 INSTALLED_APPS = [
-    'api',
     'releasesplatform',
     'rest_framework',
     'django.contrib.admin',
