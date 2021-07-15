@@ -29,12 +29,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '134.209.94.227']
 
-AUTH_USER_MODEL = 'ReleasesApp.User'
+AUTH_USER_MODEL = 'releasesplatform.User'
 
 # Application definition
 
 INSTALLED_APPS = [
-    'ReleasesApp',
+    'releasesplatform',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'releases.urls'
+ROOT_URLCONF = 'main.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'releases.wsgi.application'
+WSGI_APPLICATION = 'main.wsgi.application'
 
 
 # Database

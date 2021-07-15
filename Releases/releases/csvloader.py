@@ -3,7 +3,7 @@ import pandas as pd
 import sys, os
 
 # initialise dataframe with csv
-csv = pd.read_csv(os.path.realpath("ReleasesApp/resources/legacy_releases.csv"))
+csv = pd.read_csv(os.path.realpath("releasesplatform/resources/legacy_releases.csv"))
 
 # csv cleanup
 csv.rename(columns=csv.iloc[0])
